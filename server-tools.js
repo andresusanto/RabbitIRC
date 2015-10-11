@@ -3,6 +3,7 @@ var amqp = require('amqplib/callback_api');
 module.exports = {
 	serverAddress : '167.205.32.46',
 	queueIdentifier : '13512028_',
+	channelIdentifier : '13512028_channel_',
 	serverIdentifier : '13512028_server_',
 	clients : [],
 		
@@ -22,6 +23,8 @@ module.exports = {
 	listen : function(){
 		clients = this.clients;
 		serverIdentifier = this.serverIdentifier;
+		channelIdentifier = this.channelIdentifier;
+		queueIdentifier = this.queueIdentifier;
 		
 		amqp.connect('amqp://' + this.serverAddress, function(err, conn) {
 			conn.createChannel(function(err, ch) {
@@ -35,14 +38,37 @@ module.exports = {
 					
 					switch (req.request){
 						case 'nick':
-							if (clients.indexOf(req.command) == -1){
+							if (clients[req.command] == undefined){
 								answer = "1";
-								clients.push(req.command);
+								clients[req.command] = [];
 							}else{
 								answer = "0";
 							}
 							break;
-							
+						
+						case 'join':
+							if (clients[req.nick].indexOf(req.command) == -1){
+								ch.assertExchange(channelIdentifier + req.command, 'fanout', {durable: false});
+								ch.bindQueue(queueIdentifier + req.nick, channelIdentifier + req.command, '');
+								clients[req.nick].push(req.command);
+								answer = "1";
+							}else{
+								answer = "0";
+							}
+							break;
+						
+						case 'leave':
+							if (clients[req.nick].indexOf(req.command) != -1){
+								ch.assertExchange(channelIdentifier + req.command, 'fanout', {durable: false});
+								ch.unbindQueue(queueIdentifier + req.nick, channelIdentifier + req.command, '');
+								
+								clients[req.nick].splice(clients[req.nick].indexOf(req.command));
+								answer = "1";
+							}else{
+								answer = "0";
+							}
+							break;
+						
 					}
 					
 					ch.sendToQueue(msg.properties.replyTo, new Buffer(answer), {correlationId: msg.properties.correlationId});
