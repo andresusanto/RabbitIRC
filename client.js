@@ -78,7 +78,7 @@ process.stdin.on('data', function (_text) {
 					console.log(element);
 				});
 				console.log("  -- END MESSAGES --");
-				tools.messages = [];
+				tools.messages.splice(0,tools.messages.length);
 			}else{
 				console.log("  -- No new message --");
 			}

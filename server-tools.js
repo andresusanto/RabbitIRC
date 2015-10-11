@@ -71,7 +71,7 @@ module.exports = {
 							
 						case 'sendto':
 							if (clients[req.nick].indexOf(req.to) != -1){
-								ch.publish(channelIdentifier + req.to, '', new Buffer('[' + req.nick + ']\t' + req.message));
+								ch.publish(channelIdentifier + req.to, '', new Buffer('[' + req.to + ']\t' + req.nick + ': ' + req.message));
 								answer = "1";
 							}else{
 								answer = "0";
@@ -81,7 +81,7 @@ module.exports = {
 						case 'sendall':
 							if (clients[req.nick] != undefined){
 								clients[req.nick].forEach(function(element){
-									ch.publish(channelIdentifier + element, '', new Buffer('[' + req.nick + ']\t' + req.message));
+									ch.publish(channelIdentifier + element, '', new Buffer('[' + element + ']\t' + req.nick + ': ' + req.message));
 								});
 								answer = "1";
 							}else{
