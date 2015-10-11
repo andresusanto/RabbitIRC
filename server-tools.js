@@ -30,9 +30,22 @@ module.exports = {
 				ch.assertQueue(q, {durable: false});
 				ch.prefetch(1);
 				ch.consume(q, function (msg) {
-				//	var n = parseInt(msg.content.toString());
-					var n = "1";//msg.content.toString() + " appended!";
-					ch.sendToQueue(msg.properties.replyTo, new Buffer(n), {correlationId: msg.properties.correlationId});
+					var answer = "0";
+					var req = JSON.parse(msg.content.toString());
+					
+					switch (req.request){
+						case 'nick':
+							if (clients.indexOf(req.command) == -1){
+								answer = "1";
+								clients.push(req.command);
+							}else{
+								answer = "0";
+							}
+							break;
+							
+					}
+					
+					ch.sendToQueue(msg.properties.replyTo, new Buffer(answer), {correlationId: msg.properties.correlationId});
 					ch.ack(msg);
 				});
 			});
