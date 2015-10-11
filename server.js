@@ -1,3 +1,3 @@
-var tools = require('./server-tools.js');
+var server = require('./server-tools.js');
 
-tools.rpcListen();
+server.listen();
