@@ -5,6 +5,7 @@ module.exports = {
 	queueIdentifier : '13512028_',
 	serverIdentifier : '13512028_server_',
 	nick : '',
+	messages : [],
 	
 	genToken : function(){
 		return Math.random().toString() + Math.random().toString() + Math.random().toString();
@@ -55,6 +56,7 @@ module.exports = {
 	listen : function(){
 		var nick = this.nick;
 		var queueIdentifier = this.queueIdentifier;
+		var messages = this.messages;
 		
 		amqp.connect('amqp://' + this.serverAddress, function(err, conn) {
 			conn.createChannel(function(err, ch) {
@@ -62,7 +64,7 @@ module.exports = {
 
 				ch.assertQueue(q, {durable: false});
 				ch.consume(q, function(msg) {
-				console.log(" -- %s", msg.content.toString());
+					messages.push(msg.content.toString());
 				}, {noAck: true});
 			});
 		});

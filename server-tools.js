@@ -68,6 +68,15 @@ module.exports = {
 								answer = "0";
 							}
 							break;
+							
+						case 'sendto':
+							if (clients[req.nick].indexOf(req.to) != -1){
+								ch.publish(channelIdentifier + req.to, '', new Buffer('[' + req.nick + ']\t' + req.message));
+								answer = "1";
+							}else{
+								answer = "0";
+							}
+							break;
 						
 					}
 					

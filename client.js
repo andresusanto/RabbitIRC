@@ -71,7 +71,17 @@ process.stdin.on('data', function (_text) {
 					console.log("You are not a member of #" + msg_intent[1]);
 				}
 			});
-			
+		}else if (command.substring(0, 5) == '/read'){
+			if (tools.messages.length > 0){
+				console.log("  -- NEW MESSAGES --");
+				tools.messages.forEach(function(element){
+					console.log(element);
+				});
+				console.log("  -- END MESSAGES --");
+				tools.messages = [];
+			}else{
+				console.log("  -- No new message --");
+			}
 		}else{ // broadcast message
 			console.log('Sending message to all #channel, please wait ...');
 			
