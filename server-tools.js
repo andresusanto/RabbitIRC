@@ -78,6 +78,17 @@ module.exports = {
 							}
 							break;
 						
+						case 'sendall':
+							if (clients[req.nick] != undefined){
+								clients[req.nick].forEach(function(element){
+									ch.publish(channelIdentifier + element, '', new Buffer('[' + req.nick + ']\t' + req.message));
+								});
+								answer = "1";
+							}else{
+								answer = "0";
+							}
+							break;
+						
 					}
 					
 					ch.sendToQueue(msg.properties.replyTo, new Buffer(answer), {correlationId: msg.properties.correlationId});
