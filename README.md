@@ -76,6 +76,7 @@ There are some tests that I've performed to this project. Followings are the res
 ![Leave Test](/../screenshoot/screenshoots/leavetest.JPG?raw=true "Leave Test")
 
 **Scenario:**
+
 1. First client leaved #Crowd
 2. First client sent messages to all channel
 3. Second client didn't receive the message as first client had left #Crowd
